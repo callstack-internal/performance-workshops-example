@@ -5,6 +5,21 @@
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
     /* Completeness */
+    "baseUrl": "./src",
+    "paths": {
+      "~components/*": ["components/*"],
+      "~screens/*": ["screens/*"],
+      "~utils/*": ["utils/*"],
+      "~hooks/*": ["hooks/*"],
+      "~services/*": ["services/*"],
+      "~navigation/*": ["navigation/*"],
+      "~components": ["components/"],
+      "~screens": ["screens/"],
+      "~utils": ["utils/"],
+      "~hooks": ["hooks/"],
+      "~services": ["services/"],
+      "~navigation": ["navigation/"]
+    },
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
-  }
+  },
 }
