@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {StyleSheet, View} from 'react-native';
+import styled from 'styled-components/native';
 import {ShimmerEffectProvider} from './shimmer-effect-provider';
 
 const shimmerBackground = '#2E2E2E';
@@ -14,22 +14,43 @@ export const ExhibitionsShimmer = () => {
       backgroundColor={shimmerBackground}
       highlightColor={shimmerHighlight}>
       {protoArray.map(item => (
-        <View key={item} style={styles.shimmerContainer}>
-          <View style={[styles.shimmerBase, styles.shimmerTitle]} />
-          <View style={[styles.shimmerBase, styles.shimmerDescription]} />
-          <View style={[styles.shimmerBase, styles.shimmerImage]} />
-          <View style={[styles.shimmerBase, styles.shimmerLinkButton]} />
-        </View>
+        <ShimmerContainer key={item}>
+          <ShimmerTitle />
+          <ShimmerDescription />
+          <ShimmerImage />
+          <ShimmerLinkButton />
+        </ShimmerContainer>
       ))}
     </ShimmerEffectProvider>
   );
 };
 
-const styles = StyleSheet.create({
-  shimmerContainer: {marginBottom: 24},
-  shimmerBase: {backgroundColor: '#fff', borderRadius: 4, marginBottom: 4},
-  shimmerTitle: {width: 160, height: 20},
-  shimmerDescription: {width: '100%', height: 32},
-  shimmerImage: {width: '100%', height: 160},
-  shimmerLinkButton: {width: 80, height: 20},
-});
+const ShimmerContainer = styled.View`
+  margin-bottom: 24px;
+`;
+
+const ShimmerBase = styled.View`
+  background-color: #ffffff;
+  border-radius: 4px;
+  margin-bottom: 4px;
+`;
+
+const ShimmerTitle = styled(ShimmerBase)`
+  width: 160px;
+  height: 20px;
+`;
+
+const ShimmerDescription = styled(ShimmerBase)`
+  width: 100%;
+  height: 32px;
+`;
+
+const ShimmerImage = styled(ShimmerBase)`
+  width: 100%;
+  height: 160px;
+`;
+
+const ShimmerLinkButton = styled(ShimmerBase)`
+  width: 80px;
+  height: 20px;
+`;

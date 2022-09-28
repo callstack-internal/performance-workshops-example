@@ -1,0 +1,53 @@
+import styled from 'styled-components/native';
+
+export const Container = styled.View`
+  height: 100%;
+  width: 100%;
+  padding: 32px;
+`;
+
+export const Header = styled.Text`
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-align: center;
+  margin-bottom: 16px;
+  color: ${({color}) => color};
+`;
+
+export const SubHeader = styled.Text`
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 16px;
+  color: ${({color}) => color};
+`;
+
+export const Item = styled.View`
+  padding: 4px 8px;
+  margin-bottom: 16px;
+`;
+
+export const ItemTitle = styled.Text`
+  color: #fff;
+  padding-bottom: 4px;
+`;
+
+export const ItemDescription = styled.Text`
+  color: #fff;
+  padding-bottom: 16px;
+`;
+
+export const ItemImagePlaceholder = styled.Image`
+  height: 200px;
+  width: 100%;
+  background-color: #454545;
+`;
+
+export const ItemLinkButton = styled.Text`
+  color: #3fff89;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+  text-decoration-line: underline;
+`;

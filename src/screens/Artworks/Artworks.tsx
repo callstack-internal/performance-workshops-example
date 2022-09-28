@@ -1,18 +1,18 @@
 import * as React from 'react';
-import {
-  View,
-  Text,
-  useColorScheme,
-  StyleSheet,
-  SafeAreaView,
-  StatusBar,
-  FlatList,
-  Image,
-} from 'react-native';
+import {useColorScheme, SafeAreaView, StatusBar, FlatList} from 'react-native';
 import {useQuery} from 'react-query';
 import {ArtworksShimmer} from '~components';
 import {artService} from '~services/artService';
 import {Colors, defaultColorMode} from '~utils/colors';
+import {
+  Container,
+  Header,
+  Item,
+  ItemDescription,
+  ItemImagePlaceholder,
+  ItemTitle,
+  SubHeader,
+} from './Artworks.styled';
 
 type Props = {};
 
@@ -32,11 +32,11 @@ export const Artworks = ({}: Props) => {
   const renderItem = ({item}: {item: any}) => {
     const uri = `https://www.artic.edu/iiif/2/${item?.image_id}/full/400,/0/default.jpg`;
     return (
-      <View style={styles.item}>
-        <Text style={styles.itemTitle}>{item?.title}</Text>
-        <Text style={styles.itemDescription}>{item?.thumbnail?.alt_text}</Text>
-        <Image style={styles.itemImagePlaceholder} source={{uri}} />
-      </View>
+      <Item>
+        <ItemTitle>{item?.title}</ItemTitle>
+        <ItemDescription>{item?.thumbnail?.alt_text}</ItemDescription>
+        <ItemImagePlaceholder source={{uri}} />
+      </Item>
     );
   };
 
@@ -46,66 +46,19 @@ export const Artworks = ({}: Props) => {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <View style={styles.containerStyle}>
-        <Text
-          style={[
-            styles.header,
-            {color: isDarkMode ? Colors.light : Colors.dark},
-          ]}>
+      <Container>
+        <Header color={isDarkMode ? Colors.light : Colors.dark}>
           Chicago Art Museum
-        </Text>
-        <Text
-          style={[
-            styles.subHeader,
-            {color: isDarkMode ? Colors.light : Colors.dark},
-          ]}>
-          Available Artpieces
-        </Text>
+        </Header>
+        <SubHeader color={isDarkMode ? Colors.light : Colors.dark}>
+          Enjoy some random artpieces from the museum
+        </SubHeader>
         {isLoading ? (
           <ArtworksShimmer />
         ) : (
           <FlatList data={data?.data} renderItem={renderItem} />
         )}
-      </View>
+      </Container>
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  containerStyle: {
-    height: '100%',
-    width: '100%',
-    padding: 32,
-  },
-  header: {
-    fontSize: 22,
-    fontWeight: '700',
-    letterSpacing: 1,
-    textAlign: 'center',
-    marginBottom: 16,
-  },
-  subHeader: {
-    fontSize: 16,
-    fontWeight: '600',
-    textAlign: 'center',
-    marginBottom: 16,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  loader: {
-    textAlign: 'center',
-    fontSize: 16,
-    fontWeight: '800',
-    letterSpacing: 0.5,
-    color: '#F85555',
-  },
-  item: {paddingVertical: 8, paddingHorizontal: 4, marginBottom: 16},
-  itemTitle: {color: '#fff', paddingBottom: 4},
-  itemDescription: {color: '#fff', paddingBottom: 16},
-  itemImagePlaceholder: {
-    height: 200,
-    width: '100%',
-    backgroundColor: '#454545',
-  },
-});
