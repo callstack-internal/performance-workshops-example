@@ -109,4 +109,9 @@ const styles = StyleSheet.create({
   highlight: {
     fontWeight: '700',
   },
+  shimmer: {
+    height: 500,
+    width: 500,
+    background: 'pink',
+  },
 });

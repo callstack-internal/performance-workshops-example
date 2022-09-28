@@ -10,6 +10,7 @@ import {
   Image,
 } from 'react-native';
 import {useQuery} from 'react-query';
+import {ArtworksShimmer} from '~components';
 import {artService} from '~services/artService';
 import {Colors, defaultColorMode} from '~utils/colors';
 
@@ -26,12 +27,6 @@ export const Artworks = ({}: Props) => {
   const {data, isLoading} = useQuery<any>(
     ['artworks', 'collections/artworks', queryOptions],
     () => artService.fetch('collections/artworks', queryOptions),
-  );
-
-  const renderLoader = React.useCallback(
-    () =>
-      isLoading ? <Text style={styles.loader}>Loading data...</Text> : null,
-    [isLoading],
   );
 
   const renderItem = ({item}: {item: any}) => {
@@ -66,8 +61,11 @@ export const Artworks = ({}: Props) => {
           ]}>
           Available Artpieces
         </Text>
-        <FlatList data={data?.data} renderItem={renderItem} />
-        {renderLoader()}
+        {!isLoading ? (
+          <ArtworksShimmer />
+        ) : (
+          <FlatList data={data?.data} renderItem={renderItem} />
+        )}
       </View>
     </SafeAreaView>
   );

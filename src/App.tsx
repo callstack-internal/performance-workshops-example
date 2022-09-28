@@ -16,12 +16,14 @@ import {BottomTabNavigator} from '~navigation/bottom-tab-navigator';
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <NavigationContainer>
-    <QueryClientProvider client={queryClient}>
-      <BottomTabNavigator />
-    </QueryClientProvider>
-  </NavigationContainer>
-);
+const App = () => {
+  return (
+    <NavigationContainer>
+      <QueryClientProvider client={queryClient}>
+        <BottomTabNavigator />
+      </QueryClientProvider>
+    </NavigationContainer>
+  );
+};
 
 export default App;
