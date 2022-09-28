@@ -12,6 +12,7 @@ import {
   Linking,
 } from 'react-native';
 import {useQuery} from 'react-query';
+import {ExhibitionsShimmer} from '~components/shimmers/ExhibitionsShimmer';
 import {artService} from '~services/artService';
 import {Colors, defaultColorMode} from '~utils/colors';
 
@@ -29,7 +30,7 @@ export const Exhibitions = ({}: Props) => {
   const backgroundStyle = {
     backgroundColor: Colors[currentMode || defaultColorMode],
   };
-  const {data, isLoading} = useQuery<any>(
+  const {data} = useQuery<any>(
     ['artworks', 'collections/exhibitions', queryOptions],
     () => artService.fetch('collections/exhibitions', queryOptions),
     {
@@ -53,20 +54,6 @@ export const Exhibitions = ({}: Props) => {
     },
   );
 
-  /** Simple snippet checking whether data is not being cloned via subsequent query runs */
-  // const isDataStable =
-  //   !!exhibitions &&
-  //   Object.keys(exhibitions).length === data?.pagination?.current_page;
-
-  // console.log('IS DATA STABLE? :: ', isDataStable);
-
-  // if (!isDataStable) {
-  //   console.log('IS DATA STABLE? [DEBUG] :: ', {
-  //     exhibitionsLength: exhibitions && Object.keys(exhibitions).length,
-  //     currentPage: data?.pagination?.current_page,
-  //   });
-  // }
-
   const getExhibitionsArray = React.useCallback<() => any[]>(() => {
     if (exhibitions === null) {
       return [];
@@ -81,11 +68,6 @@ export const Exhibitions = ({}: Props) => {
 
     return result;
   }, [exhibitions]);
-
-  const renderLoader = React.useCallback(
-    () => (isLoading ? <Text>Loading data...</Text> : null),
-    [isLoading],
-  );
 
   const renderItem = ({item}: {item: any}) => {
     return (
@@ -126,14 +108,17 @@ export const Exhibitions = ({}: Props) => {
           ]}>
           Available Exhibitions
         </Text>
-        {renderLoader()}
-        <FlatList
-          data={getExhibitionsArray()}
-          renderItem={renderItem}
-          keyExtractor={item => item?.id}
-          onEndReachedThreshold={1}
-          onEndReached={() => setPage(data?.pagination.current_page + 1)}
-        />
+        {!data ? (
+          <ExhibitionsShimmer />
+        ) : (
+          <FlatList
+            data={getExhibitionsArray()}
+            renderItem={renderItem}
+            keyExtractor={item => item?.id}
+            onEndReachedThreshold={1}
+            onEndReached={() => setPage(data?.pagination.current_page + 1)}
+          />
+        )}
       </View>
     </SafeAreaView>
   );
@@ -150,8 +135,14 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     letterSpacing: 1,
     textAlign: 'center',
+    marginBottom: 16,
   },
-  subHeader: {fontSize: 16, textAlign: 'center', marginTop: 24},
+  subHeader: {
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginBottom: 16,
+  },
   highlight: {
     fontWeight: '700',
   },

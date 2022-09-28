@@ -1,2 +1,2 @@
 export * from './shimmer-effect-provider';
-export {ArtworksShimmer} from './artworks/ArtworksShimmer';
+export {ArtworksShimmer} from './ArtworksShimmer';

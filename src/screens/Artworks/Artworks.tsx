@@ -61,7 +61,7 @@ export const Artworks = ({}: Props) => {
           ]}>
           Available Artpieces
         </Text>
-        {!isLoading ? (
+        {isLoading ? (
           <ArtworksShimmer />
         ) : (
           <FlatList data={data?.data} renderItem={renderItem} />

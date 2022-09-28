@@ -13,10 +13,12 @@ import {NavigationContainer} from '@react-navigation/native';
 import {QueryClient, QueryClientProvider} from 'react-query';
 
 import {BottomTabNavigator} from '~navigation/bottom-tab-navigator';
+import {usePredefinedSharedValue} from '~components/shimmers/shimmer-effect-provider/useSharedValue';
 
 const queryClient = new QueryClient();
 
 const App = () => {
+  usePredefinedSharedValue();
   return (
     <NavigationContainer>
       <QueryClientProvider client={queryClient}>
