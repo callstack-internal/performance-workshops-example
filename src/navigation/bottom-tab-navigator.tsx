@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Welcome} from '~screens/Welcome/Welcome';
-import {useColorScheme} from 'react-native';
+import {StyleSheet, useColorScheme} from 'react-native';
 import {Colors, defaultColorMode} from '~utils/colors';
-import {Collections, Exhibitions} from '~screens';
+import {Artworks, Exhibitions} from '~screens';
 
 const Tab = createBottomTabNavigator();
 
@@ -26,13 +26,8 @@ export const BottomTabNavigator = () => {
           backgroundColor: Colors[currentMode || defaultColorMode],
         },
         tabBarIcon: Noop,
-        tabBarLabelStyle: {
-          fontSize: 12,
-          textTransform: 'uppercase',
-          letterSpacing: 1,
-          fontWeight: '700',
-        },
-        tabBarItemStyle: {height: 32},
+        tabBarLabelStyle: styles.tabBarLabel,
+        tabBarItemStyle: styles.tabBarItem,
       })}>
       <Tab.Screen
         name="Welcome"
@@ -40,7 +35,17 @@ export const BottomTabNavigator = () => {
         options={() => ({header: Noop})}
       />
       <Tab.Screen name="Exhibitions" component={Exhibitions} />
-      <Tab.Screen name="Collections" component={Collections} />
+      <Tab.Screen name="Artworks" component={Artworks} />
     </Tab.Navigator>
   );
 };
+
+const styles = StyleSheet.create({
+  tabBarLabel: {
+    fontSize: 12,
+    letterSpacing: 1,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+  },
+  tabBarItem: {height: 32},
+});

@@ -19,19 +19,68 @@ type Props = {};
 
 export const Exhibitions = ({}: Props) => {
   const [currentPage, setPage] = React.useState(1);
-  const [exhibitions, setExhibitions] = React.useState<any[]>([]);
+  const [exhibitions, setExhibitions] = React.useState<{
+    [key: string]: any[];
+  } | null>(null);
   const currentMode = useColorScheme();
   const isDarkMode = currentMode === 'dark';
+  const queryOptions = {limit: '10', page: currentPage.toString()};
 
   const backgroundStyle = {
     backgroundColor: Colors[currentMode || defaultColorMode],
   };
-  const queryOptions = {limit: '10', page: currentPage.toString()};
   const {data, isLoading} = useQuery<any>(
     ['artworks', 'collections/exhibitions', queryOptions],
     () => artService.fetch('collections/exhibitions', queryOptions),
-    {onSuccess: res => setExhibitions([...exhibitions, ...res.data])},
+    {
+      onSuccess: res => {
+        const resPage = res.pagination?.current_page;
+        const resData = res.data;
+
+        if (exhibitions?.[resPage]?.length) {
+          return;
+        }
+
+        if (!!resPage && !!resData) {
+          const toSet = {
+            ...exhibitions,
+            [resPage]: resData,
+          };
+
+          setExhibitions(toSet);
+        }
+      },
+    },
   );
+
+  /** Simple snippet checking whether data is not being cloned via subsequent query runs */
+  // const isDataStable =
+  //   !!exhibitions &&
+  //   Object.keys(exhibitions).length === data?.pagination?.current_page;
+
+  // console.log('IS DATA STABLE? :: ', isDataStable);
+
+  // if (!isDataStable) {
+  //   console.log('IS DATA STABLE? [DEBUG] :: ', {
+  //     exhibitionsLength: exhibitions && Object.keys(exhibitions).length,
+  //     currentPage: data?.pagination?.current_page,
+  //   });
+  // }
+
+  const getExhibitionsArray = React.useCallback<() => any[]>(() => {
+    if (exhibitions === null) {
+      return [];
+    }
+
+    const exhibitionsKeys = Object.keys(exhibitions);
+    let result: any[] = [];
+
+    for (const key of exhibitionsKeys) {
+      result = [...result, ...exhibitions[key]];
+    }
+
+    return result;
+  }, [exhibitions]);
 
   const renderLoader = React.useCallback(
     () => (isLoading ? <Text>Loading data...</Text> : null),
@@ -40,26 +89,16 @@ export const Exhibitions = ({}: Props) => {
 
   const renderItem = ({item}: {item: any}) => {
     return (
-      <View
-        style={{paddingVertical: 8, paddingHorizontal: 4, marginBottom: 16}}>
-        <Text style={{color: '#fff'}}>{item?.title}</Text>
-        <Text style={{color: '#fff'}}>{item?.short_description}</Text>
+      <View style={styles.item}>
+        <Text style={styles.itemTitle}>{item?.title}</Text>
+        <Text style={styles.itemDescription}>{item?.short_description}</Text>
         <Image
-          style={{height: 200, width: '100%', backgroundColor: '#454545'}}
+          style={styles.itemImagePlaceholder}
           source={{uri: item?.image_url}}
         />
         {item.web_url ? (
           <TouchableOpacity onPress={() => Linking.openURL(item.web_url)}>
-            <Text
-              style={{
-                color: '#3FFF89',
-                textTransform: 'uppercase',
-                letterSpacing: 1,
-                fontWeight: '700',
-                textDecorationLine: 'underline',
-              }}>
-              See more
-            </Text>
+            <Text style={styles.itemLinkButton}>See more</Text>
           </TouchableOpacity>
         ) : null}
       </View>
@@ -89,9 +128,9 @@ export const Exhibitions = ({}: Props) => {
         </Text>
         {renderLoader()}
         <FlatList
-          data={exhibitions}
+          data={getExhibitionsArray()}
           renderItem={renderItem}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item?.id}
           onEndReachedThreshold={1}
           onEndReached={() => setPage(data?.pagination.current_page + 1)}
         />
@@ -115,5 +154,20 @@ const styles = StyleSheet.create({
   subHeader: {fontSize: 16, textAlign: 'center', marginTop: 24},
   highlight: {
     fontWeight: '700',
+  },
+  item: {paddingVertical: 8, paddingHorizontal: 4, marginBottom: 16},
+  itemTitle: {color: '#fff'},
+  itemDescription: {color: '#fff'},
+  itemImagePlaceholder: {
+    height: 200,
+    width: '100%',
+    backgroundColor: '#454545',
+  },
+  itemLinkButton: {
+    color: '#3FFF89',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    fontWeight: '700',
+    textDecorationLine: 'underline',
   },
 });

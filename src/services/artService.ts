@@ -1,14 +1,5 @@
 import axios, {AxiosResponse} from 'axios';
 
-/**
-ids - A comma-separated list of resource ids to retrieve
-limit - The number of resources to return per page
-page - The page of resources to retrieve
-fields - A comma-separated list of fields to return per resource
-include - A comma-separated list of subresource to embed in the returned resources. Available options are:
-
- */
-
 type baseOptions = 'ids' | 'limit' | 'page' | 'fields';
 type artworksIncludes =
   | 'artist_pivots'
@@ -32,6 +23,8 @@ export class ArtService {
     'collections/exhibitions': `${ArtService.BASE_URL}/exhibitions`,
   };
 
+  constructor({}) {}
+
   private getEndpoint(
     address: keyof typeof ArtService.ENDPOINTS,
     params?: endpointParams,
@@ -49,7 +42,6 @@ export class ArtService {
 
   private parseParams = (endpoint: string, params?: endpointParams) => {
     if (!params) {
-      console.log('Returning endpoint :: ', endpoint);
       return endpoint;
     }
 
@@ -60,12 +52,8 @@ export class ArtService {
       endpoint,
     );
 
-    console.log('Returning endpoint :: ', result);
-
     return result;
   };
-
-  constructor({}) {}
 
   public fetch = async (
     address: keyof typeof ArtService.ENDPOINTS,

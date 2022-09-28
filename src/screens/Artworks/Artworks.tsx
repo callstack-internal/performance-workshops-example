@@ -15,7 +15,7 @@ import {Colors, defaultColorMode} from '~utils/colors';
 
 type Props = {};
 
-export const Collections = ({}: Props) => {
+export const Artworks = ({}: Props) => {
   const currentMode = useColorScheme();
   const isDarkMode = currentMode === 'dark';
 
@@ -30,29 +30,17 @@ export const Collections = ({}: Props) => {
 
   const renderLoader = React.useCallback(
     () =>
-      isLoading ? (
-        <Text
-          style={{
-            textAlign: 'center',
-            fontSize: 16,
-            fontWeight: '800',
-            letterSpacing: 0.5,
-            color: '#F85555',
-          }}>
-          Loading data...
-        </Text>
-      ) : null,
+      isLoading ? <Text style={styles.loader}>Loading data...</Text> : null,
     [isLoading],
   );
 
   const renderItem = ({item}: {item: any}) => {
     const uri = `https://www.artic.edu/iiif/2/${item?.image_id}/full/400,/0/default.jpg`;
     return (
-      <View
-        style={{paddingVertical: 8, paddingHorizontal: 4, marginBottom: 16}}>
-        <Text style={{color: '#fff'}}>{item?.title}</Text>
-        <Text style={{color: '#fff'}}>{item?.thumbnail?.alt_text}</Text>
-        <Image style={{height: 200, width: '100%'}} source={{uri}} />
+      <View style={styles.item}>
+        <Text style={styles.itemTitle}>{item?.title}</Text>
+        <Text style={styles.itemDescription}>{item?.thumbnail?.alt_text}</Text>
+        <Image style={styles.itemImagePlaceholder} source={{uri}} />
       </View>
     );
   };
@@ -76,7 +64,7 @@ export const Collections = ({}: Props) => {
             styles.subHeader,
             {color: isDarkMode ? Colors.light : Colors.dark},
           ]}>
-          Available Collections
+          Available Artpieces
         </Text>
         <FlatList data={data?.data} renderItem={renderItem} />
         {renderLoader()}
@@ -96,9 +84,30 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     letterSpacing: 1,
     textAlign: 'center',
+    marginBottom: 16,
   },
-  subHeader: {fontSize: 16, textAlign: 'center', marginTop: 24},
+  subHeader: {
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginBottom: 16,
+  },
   highlight: {
     fontWeight: '700',
+  },
+  loader: {
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: '800',
+    letterSpacing: 0.5,
+    color: '#F85555',
+  },
+  item: {paddingVertical: 8, paddingHorizontal: 4, marginBottom: 16},
+  itemTitle: {color: '#fff', paddingBottom: 4},
+  itemDescription: {color: '#fff', paddingBottom: 16},
+  itemImagePlaceholder: {
+    height: 200,
+    width: '100%',
+    backgroundColor: '#454545',
   },
 });

@@ -1,5 +1,5 @@
-import {Collections} from './Collections/Collections';
+import {Artworks} from './Artworks/Artworks';
 import {Exhibitions} from './Exhibitions/Exhibitions';
 import {Welcome} from './Welcome/Welcome';
 
-export {Collections, Exhibitions, Welcome};
+export {Artworks, Exhibitions, Welcome};

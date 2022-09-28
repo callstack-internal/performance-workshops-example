@@ -40,6 +40,39 @@ export const Welcome = ({}: Props) => {
           ]}>
           CK Performancer Workshops 2022
         </Text>
+        <Text
+          style={[
+            styles.paragraph,
+            {color: isDarkMode ? Colors.light : Colors.dark},
+          ]}>
+          Hello everybody and welcome to our example of a sad and broken app
+          that needs help to get back on its feet ;)
+        </Text>
+        <Text
+          style={[
+            styles.paragraph,
+            {color: isDarkMode ? Colors.light : Colors.dark},
+          ]}>
+          During our workshops over the next two days, we'll make this app run
+          optimally on both current devices as well as those annoying old
+          androids ;)
+        </Text>
+        <Text
+          style={[
+            styles.paragraph,
+            {color: isDarkMode ? Colors.light : Colors.dark},
+          ]}>
+          We'll use this space to mark our milestones and pass on some
+          instructions along each step of the way, so please make sure that your
+          setup is running, your coffee is hot and you're ready to go.
+        </Text>
+        <Text
+          style={[
+            styles.paragraph,
+            {color: isDarkMode ? Colors.light : Colors.dark},
+          ]}>
+          {'\nEnjoy! \n\nMaciek & Kuba'}
+        </Text>
       </View>
     </SafeAreaView>
   );
@@ -49,15 +82,30 @@ const styles = StyleSheet.create({
   containerStyle: {
     height: '100%',
     width: '100%',
-    padding: 32,
+    paddingTop: 32,
+    paddingBottom: 64,
+    paddingHorizontal: 24,
   },
   header: {
     fontSize: 22,
     fontWeight: '700',
     letterSpacing: 1,
     textAlign: 'center',
+    marginBottom: 40,
   },
-  subHeader: {fontSize: 16, textAlign: 'center', marginTop: 24},
+  subHeader: {
+    fontSize: 20,
+    fontWeight: '500',
+    textAlign: 'center',
+    marginBottom: 48,
+  },
+  paragraph: {
+    fontSize: 18,
+    lineHeight: 22,
+    fontWeight: '500',
+    marginVertical: 8,
+    letterSpacing: 0.2,
+  },
   highlight: {
     fontWeight: '700',
   },
