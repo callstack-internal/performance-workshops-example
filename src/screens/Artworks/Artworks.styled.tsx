@@ -31,15 +31,17 @@ export const Item = styled.View`
 export const ItemTitle = styled.Text`
   color: #fff;
   padding-bottom: 4px;
+  color: ${({color}) => color};
 `;
 
 export const ItemDescription = styled.Text`
   color: #fff;
   padding-bottom: 16px;
+  color: ${({color}) => color};
 `;
 
 export const ItemImagePlaceholder = styled.Image`
   height: 200px;
   width: 100%;
-  background-color: #454545;
+  background-color: ${({isDark}) => (isDark ? '#454545' : '#C5C5C5')};
 `;

@@ -30,12 +30,16 @@ export const Artworks = ({}: Props) => {
   );
 
   const renderItem = ({item}: {item: any}) => {
-    const uri = `https://www.artic.edu/iiif/2/${item?.image_id}/full/400,/0/default.jpg`;
+    const uri = `https://www.artic.edu/iiif/2/${item?.image_id}/full/1680,/0/default.jpg`;
     return (
       <Item>
-        <ItemTitle>{item?.title}</ItemTitle>
-        <ItemDescription>{item?.thumbnail?.alt_text}</ItemDescription>
-        <ItemImagePlaceholder source={{uri}} />
+        <ItemTitle color={isDarkMode ? Colors.light : Colors.dark}>
+          {item?.title}
+        </ItemTitle>
+        <ItemDescription color={isDarkMode ? Colors.light : Colors.dark}>
+          {item?.thumbnail?.alt_text}
+        </ItemDescription>
+        <ItemImagePlaceholder isDark={isDarkMode} source={{uri}} />
       </Item>
     );
   };

@@ -78,9 +78,16 @@ export const Exhibitions = ({}: Props) => {
   const renderItem = ({item}: {item: any}) => {
     return (
       <Item>
-        <ItemTitle>{item?.title}</ItemTitle>
-        <ItemDescription>{item?.short_description}</ItemDescription>
-        <ItemImagePlaceholder source={{uri: item?.image_url}} />
+        <ItemTitle color={isDarkMode ? Colors.light : Colors.dark}>
+          {item?.title}
+        </ItemTitle>
+        <ItemDescription color={isDarkMode ? Colors.light : Colors.dark}>
+          {item?.short_description}
+        </ItemDescription>
+        <ItemImagePlaceholder
+          isDark={isDarkMode}
+          source={{uri: item?.image_url}}
+        />
         {item.web_url ? (
           <TouchableOpacity onPress={() => Linking.openURL(item.web_url)}>
             <ItemLinkButton>See more</ItemLinkButton>
@@ -103,7 +110,7 @@ export const Exhibitions = ({}: Props) => {
         <SubHeader color={isDarkMode ? Colors.light : Colors.dark}>
           Available Exhibitions
         </SubHeader>
-        {!data ? (
+        {!getExhibitionsArray() ? (
           <ExhibitionsShimmer />
         ) : (
           <FlatList
