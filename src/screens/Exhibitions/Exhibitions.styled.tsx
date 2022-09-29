@@ -53,3 +53,8 @@ export const ItemLinkButton = styled.Text`
   font-weight: 700;
   text-decoration-line: underline;
 `;
+
+export const LoadingCaption = styled(SubHeader)`
+  color: #f14a4a;
+  text-align: center;
+`;

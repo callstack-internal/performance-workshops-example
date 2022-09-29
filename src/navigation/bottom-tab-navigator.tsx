@@ -20,7 +20,10 @@ export const BottomTabNavigator = () => {
         headerStyle: {
           backgroundColor: Colors[currentMode || defaultColorMode],
         },
-        headerTitleStyle: {color: isDarkMode ? Colors.light : Colors.dark},
+        headerTitleAlign: 'center',
+        headerTitleStyle: {
+          color: isDarkMode ? Colors.light : Colors.dark,
+        },
         headerShadowVisible: false,
         tabBarStyle: {
           backgroundColor: Colors[currentMode || defaultColorMode],
