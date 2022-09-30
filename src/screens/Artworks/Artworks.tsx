@@ -29,7 +29,7 @@ export const Artworks = ({}: Props) => {
     backgroundColor: Colors[currentMode || defaultColorMode],
   };
   const queryOptions = {limit: '15'};
-  const {data, isLoading} = useQuery<any>(
+  const {data} = useQuery<any>(
     ['artworks', 'collections/artworks', queryOptions],
     () => artService.fetch('collections/artworks', queryOptions),
   );
@@ -47,7 +47,7 @@ export const Artworks = ({}: Props) => {
         <SubHeader color={isDarkMode ? Colors.light : Colors.dark}>
           Enjoy some random artpieces from the museum
         </SubHeader>
-        {isLoading ? (
+        {!data ? (
           <ArtworksShimmer colorMode={currentMode} />
         ) : (
           <ScrollView>
