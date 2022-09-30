@@ -1,8 +1,9 @@
 import * as React from 'react';
 import {ColorSchemeName} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import styled from 'styled-components/native';
-import {defaultColorMode, shimmerColors} from '~utils/colors';
-import {ShimmerEffectProvider} from './shimmer-effect-provider';
+import {shimmerColors} from '~utils/colors';
 
 type Props = {
   colorMode: ColorSchemeName;
@@ -12,18 +13,40 @@ export const ExhibitionsShimmer = ({colorMode}: Props) => {
   const protoArray = [1, 2, 3];
 
   return (
-    <ShimmerEffectProvider
-      animate
-      backgroundColor={shimmerColors[colorMode || defaultColorMode].background}>
+    <>
       {protoArray.map(item => (
         <ShimmerContainer key={item}>
-          <ShimmerTitle />
-          <ShimmerDescription />
-          <ShimmerImage />
-          <ShimmerLinkButton />
+          <ShimmerTitle
+            shimmerColors={[
+              shimmerColors[colorMode]?.background,
+              shimmerColors[colorMode]?.highlight,
+              shimmerColors[colorMode]?.background,
+            ]}
+          />
+          <ShimmerDescription
+            shimmerColors={[
+              shimmerColors[colorMode]?.background,
+              shimmerColors[colorMode]?.highlight,
+              shimmerColors[colorMode]?.background,
+            ]}
+          />
+          <ShimmerImage
+            shimmerColors={[
+              shimmerColors[colorMode]?.background,
+              shimmerColors[colorMode]?.highlight,
+              shimmerColors[colorMode]?.background,
+            ]}
+          />
+          <ShimmerLinkButton
+            shimmerColors={[
+              shimmerColors[colorMode]?.background,
+              shimmerColors[colorMode]?.highlight,
+              shimmerColors[colorMode]?.background,
+            ]}
+          />
         </ShimmerContainer>
       ))}
-    </ShimmerEffectProvider>
+    </>
   );
 };
 
@@ -31,8 +54,9 @@ const ShimmerContainer = styled.View`
   margin-bottom: 24px;
 `;
 
-const ShimmerBase = styled.View`
-  background-color: #ffffff;
+const ShimmerBase = styled(ShimmerPlaceholder).attrs({
+  LinearGradient: LinearGradient,
+})`
   border-radius: 4px;
   margin-bottom: 4px;
 `;
