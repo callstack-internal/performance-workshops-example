@@ -14,8 +14,7 @@ export const ExhibitionsShimmer = ({colorMode}: Props) => {
   return (
     <ShimmerEffectProvider
       animate
-      backgroundColor={shimmerColors[colorMode || defaultColorMode].background}
-      highlightColor={shimmerColors[colorMode || defaultColorMode].highlight}>
+      backgroundColor={shimmerColors[colorMode || defaultColorMode].background}>
       {protoArray.map(item => (
         <ShimmerContainer key={item}>
           <ShimmerTitle />

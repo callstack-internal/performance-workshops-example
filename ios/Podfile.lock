@@ -310,6 +310,9 @@ PODS:
     - RCTTypeSafety
     - React-Core
     - ReactCommon/turbomodule/core
+  - react-native-shimmer (0.6.0):
+    - React (>= 0.45.1)
+    - Shimmer (~> 1)
   - React-perflogger (0.70.1)
   - React-RCTActionSheet (0.70.1):
     - React-Core/RCTActionSheetHeaders (= 0.70.1)
@@ -408,6 +411,7 @@ PODS:
   - RNScreens (3.17.0):
     - React-Core
     - React-RCTImage
+  - Shimmer (1.0.2)
   - SocketRocket (0.6.0)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -462,6 +466,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - react-native-shimmer (from `../node_modules/react-native-shimmer`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -494,6 +499,7 @@ SPEC REPOS:
     - fmt
     - libevent
     - OpenSSL-Universal
+    - Shimmer
     - SocketRocket
     - YogaKit
 
@@ -544,6 +550,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-shimmer:
+    :path: "../node_modules/react-native-shimmer"
   React-perflogger:
     :path: "../node_modules/react-native/ReactCommon/reactperflogger"
   React-RCTActionSheet:
@@ -614,6 +622,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 1363be638eccfe1aea1b10dd42e632b0397e5ec8
   React-logger: 7bd569e3857d74ed412ce0a5c51f421ff7d4ca7f
   react-native-safe-area-context: dfe5aa13bee37a0c7e8059d14f72ffc076d120e9
+  react-native-shimmer: 2fdba9953215a29106febc9d147caa31a0080a8a
   React-perflogger: 48c6b363e867d64b682e84f80ca45636bd65e19c
   React-RCTActionSheet: 33c74fe5c754835e3715c300618da9aa2f7203fa
   React-RCTAnimation: 2dbf0120d4d1ab7716079b4180f2ca89c465e46b
@@ -629,6 +638,7 @@ SPEC CHECKSUMS:
   RNCMaskedView: cb9670ea9239998340eaab21df13fa12a1f9de15
   RNReanimated: 60e291d42c77752a0f6d6f358387bdf225a87c6e
   RNScreens: 0df01424e9e0ed7827200d6ed1087ddd06c493f9
+  Shimmer: c5374be1c2b0c9e292fb05b339a513cf291cac86
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: 6c8252e38d65aa387daee699eacf027e055e0b31
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
