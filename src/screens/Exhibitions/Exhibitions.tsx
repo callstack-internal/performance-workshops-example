@@ -3,11 +3,13 @@ import {
   useColorScheme,
   SafeAreaView,
   StatusBar,
-  FlatList,
   TouchableOpacity,
   Linking,
+  ScrollView,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
 } from 'react-native';
-import {useQuery} from 'react-query';
+import {useInfiniteQuery} from 'react-query';
 import {ExhibitionsShimmer} from '~components/shimmers/ExhibitionsShimmer';
 import {artService} from '~services/artService';
 import {Colors, defaultColorMode} from '~utils/colors';
@@ -19,83 +21,52 @@ import {
   ItemImagePlaceholder,
   ItemLinkButton,
   ItemTitle,
+  LoadingCaption,
   SubHeader,
 } from './Exhibitions.styled';
 
 type Props = {};
 
 export const Exhibitions = ({}: Props) => {
-  const [currentPage, setPage] = React.useState(1);
-  const [exhibitions, setExhibitions] = React.useState<{
-    [key: string]: any[];
-  } | null>(null);
   const currentMode = useColorScheme();
   const isDarkMode = currentMode === 'dark';
-  const queryOptions = {limit: '10', page: currentPage.toString()};
 
   const backgroundStyle = {
     backgroundColor: Colors[currentMode || defaultColorMode],
   };
-  const {data} = useQuery<any>(
-    ['artworks', 'collections/exhibitions', queryOptions],
-    () => artService.fetch('collections/exhibitions', queryOptions),
-    {
-      onSuccess: res => {
-        const resPage = res.pagination?.current_page;
-        const resData = res.data;
 
-        if (exhibitions?.[resPage]?.length) {
-          return;
-        }
-
-        if (!!resPage && !!resData) {
-          const toSet = {
-            ...exhibitions,
-            [resPage]: resData,
-          };
-
-          setExhibitions(toSet);
-        }
-      },
-    },
+  const {data, fetchNextPage, isFetchingNextPage} = useInfiniteQuery<any>(
+    ['artworks', 'collections/exhibitions'],
+    ({pageParam = 1}) =>
+      artService.fetch('collections/exhibitions', {
+        limit: '10',
+        page: pageParam,
+      }),
+    {getNextPageParam: page => page.pagination.current_page + 1},
   );
 
-  const getExhibitionsArray = React.useCallback<() => any[]>(() => {
-    if (exhibitions === null) {
-      return [];
-    }
+  const handleOnScrollEnd = (evt: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const offsetTop = evt.nativeEvent.contentOffset.y;
+    const contentHeight = evt.nativeEvent.contentSize.height;
+    const layoutHeight = evt.nativeEvent.layoutMeasurement.height;
+    const shouldRefetch = offsetTop >= contentHeight - layoutHeight - 200;
 
-    const exhibitionsKeys = Object.keys(exhibitions);
-    let result: any[] = [];
-
-    for (const key of exhibitionsKeys) {
-      result = [...result, ...exhibitions[key]];
+    if (shouldRefetch) {
+      fetchNextPage();
     }
+  };
+
+  const getExhibitionsArray = React.useCallback<() => any[] | null>(() => {
+    if (!data?.pages.length) {
+      return null;
+    }
+    const result = data.pages.reduce(
+      (acc, curr) => [...acc, ...curr.data.map((el: unknown) => el)],
+      [],
+    );
 
     return result;
-  }, [exhibitions]);
-
-  const renderItem = ({item}: {item: any}) => {
-    return (
-      <Item>
-        <ItemTitle color={isDarkMode ? Colors.light : Colors.dark}>
-          {item?.title}
-        </ItemTitle>
-        <ItemDescription color={isDarkMode ? Colors.light : Colors.dark}>
-          {item?.short_description}
-        </ItemDescription>
-        <ItemImagePlaceholder
-          isDark={isDarkMode}
-          source={{uri: item?.image_url}}
-        />
-        {item.web_url ? (
-          <TouchableOpacity onPress={() => Linking.openURL(item.web_url)}>
-            <ItemLinkButton>See more</ItemLinkButton>
-          </TouchableOpacity>
-        ) : null}
-      </Item>
-    );
-  };
+  }, [data?.pages]);
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -110,17 +81,36 @@ export const Exhibitions = ({}: Props) => {
         <SubHeader color={isDarkMode ? Colors.light : Colors.dark}>
           Available Exhibitions
         </SubHeader>
-        {!getExhibitionsArray() ? (
-          <ExhibitionsShimmer />
+        {getExhibitionsArray() === null ? (
+          <ExhibitionsShimmer colorMode={currentMode} />
         ) : (
-          <FlatList
-            data={getExhibitionsArray()}
-            renderItem={renderItem}
-            keyExtractor={item => item?.id}
-            onEndReachedThreshold={1}
-            onEndReached={() => setPage(data?.pagination.current_page + 1)}
-          />
+          <ScrollView onMomentumScrollEnd={handleOnScrollEnd}>
+            {getExhibitionsArray()?.map((item: any) => (
+              <Item key={item.id}>
+                <ItemTitle color={isDarkMode ? Colors.light : Colors.dark}>
+                  {item?.title}
+                </ItemTitle>
+                <ItemDescription
+                  color={isDarkMode ? Colors.light : Colors.dark}>
+                  {item?.short_description}
+                </ItemDescription>
+                <ItemImagePlaceholder
+                  isDark={isDarkMode}
+                  source={{uri: item?.image_url}}
+                />
+                {item.web_url ? (
+                  <TouchableOpacity
+                    onPress={() => Linking.openURL(item.web_url)}>
+                    <ItemLinkButton>See more</ItemLinkButton>
+                  </TouchableOpacity>
+                ) : null}
+              </Item>
+            ))}
+          </ScrollView>
         )}
+        {isFetchingNextPage ? (
+          <LoadingCaption>Loading More Exhibitions...</LoadingCaption>
+        ) : null}
       </Container>
     </SafeAreaView>
   );

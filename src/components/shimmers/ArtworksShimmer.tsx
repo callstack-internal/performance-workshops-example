@@ -1,18 +1,21 @@
 import * as React from 'react';
+import {ColorSchemeName} from 'react-native';
 import styled from 'styled-components/native';
+import {defaultColorMode, shimmerColors} from '~utils/colors';
 import {ShimmerEffectProvider} from './shimmer-effect-provider';
 
-const shimmerBackground = '#2E2E2E';
-const shimmerHighlight = '#454545';
+type Props = {
+  colorMode?: ColorSchemeName;
+};
 
-export const ArtworksShimmer = () => {
+export const ArtworksShimmer = ({colorMode}: Props) => {
   const protoArray = [1, 2, 3];
 
   return (
     <ShimmerEffectProvider
       animate
-      backgroundColor={shimmerBackground}
-      highlightColor={shimmerHighlight}>
+      backgroundColor={shimmerColors[colorMode || defaultColorMode].background}
+      highlightColor={shimmerColors[colorMode || defaultColorMode].highlight}>
       {protoArray.map(item => (
         <ShimmerContainer key={item}>
           <ShimmerTitle />

@@ -1,5 +1,10 @@
 import * as React from 'react';
-import {useColorScheme, SafeAreaView, StatusBar, FlatList} from 'react-native';
+import {
+  useColorScheme,
+  SafeAreaView,
+  StatusBar,
+  ScrollView,
+} from 'react-native';
 import {useQuery} from 'react-query';
 import {ArtworksShimmer} from '~components';
 import {artService} from '~services/artService';
@@ -29,21 +34,6 @@ export const Artworks = ({}: Props) => {
     () => artService.fetch('collections/artworks', queryOptions),
   );
 
-  const renderItem = ({item}: {item: any}) => {
-    const uri = `https://www.artic.edu/iiif/2/${item?.image_id}/full/1680,/0/default.jpg`;
-    return (
-      <Item>
-        <ItemTitle color={isDarkMode ? Colors.light : Colors.dark}>
-          {item?.title}
-        </ItemTitle>
-        <ItemDescription color={isDarkMode ? Colors.light : Colors.dark}>
-          {item?.thumbnail?.alt_text}
-        </ItemDescription>
-        <ItemImagePlaceholder isDark={isDarkMode} source={{uri}} />
-      </Item>
-    );
-  };
-
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar
@@ -58,9 +48,27 @@ export const Artworks = ({}: Props) => {
           Enjoy some random artpieces from the museum
         </SubHeader>
         {isLoading ? (
-          <ArtworksShimmer />
+          <ArtworksShimmer colorMode={currentMode} />
         ) : (
-          <FlatList data={data?.data} renderItem={renderItem} />
+          <ScrollView>
+            {data?.data?.map((item: any) => (
+              <Item key={item.id}>
+                <ItemTitle color={isDarkMode ? Colors.light : Colors.dark}>
+                  {item?.title}
+                </ItemTitle>
+                <ItemDescription
+                  color={isDarkMode ? Colors.light : Colors.dark}>
+                  {item?.thumbnail?.alt_text}
+                </ItemDescription>
+                <ItemImagePlaceholder
+                  isDark={isDarkMode}
+                  source={{
+                    uri: `https://www.artic.edu/iiif/2/${item?.image_id}/full/1680,/0/default.jpg`,
+                  }}
+                />
+              </Item>
+            ))}
+          </ScrollView>
         )}
       </Container>
     </SafeAreaView>
