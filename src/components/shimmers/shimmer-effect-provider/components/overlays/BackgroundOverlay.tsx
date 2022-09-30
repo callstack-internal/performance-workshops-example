@@ -1,11 +1,13 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, ViewStyle} from 'react-native';
 import {Overlay, OverlayProps} from './Overlay';
 
-type BackgroundOverlayProps = Pick<OverlayProps, 'color'>;
+type BackgroundOverlayProps = Pick<OverlayProps, 'color'> & {
+  style?: ViewStyle;
+};
 
-export const BackgroundOverlay = ({color}: BackgroundOverlayProps) => {
-  return <Overlay color={color} styles={styles.container} />;
+export const BackgroundOverlay = ({color, style}: BackgroundOverlayProps) => {
+  return <Overlay color={color} styles={[styles.container, style]} />;
 };
 
 const styles = StyleSheet.create({

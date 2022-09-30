@@ -8,7 +8,9 @@ import {
   ScrollView,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  View,
 } from 'react-native';
+import Shimmer from 'react-native-shimmer';
 import {useInfiniteQuery} from 'react-query';
 import {ExhibitionsShimmer} from '~components/shimmers/ExhibitionsShimmer';
 import {artService} from '~services/artService';
