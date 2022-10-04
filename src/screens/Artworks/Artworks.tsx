@@ -5,6 +5,7 @@ import {
   StatusBar,
   ScrollView,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {useQuery} from 'react-query';
 import {ArtworksShimmer} from '~components';
 import {artService} from '~services/artService';
@@ -65,8 +66,10 @@ export const Artworks = ({}: Props) => {
                   <ItemImagePlaceholder
                     isDark={isDarkMode}
                     source={{
-                      uri: `https://www.artic.edu/iiif/2/${item?.image_id}/full/1680,/0/default.jpg`,
+                      uri: `https://www.artic.edu/iiif/2/${item?.image_id}/full/200,/0/default.jpg`,
+                      priority: FastImage.priority.low,
                     }}
+                    resizeMode={FastImage.resizeMode.contain}
                   />
                 </Item>
               ))}
