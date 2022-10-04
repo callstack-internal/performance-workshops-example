@@ -8,14 +8,12 @@ import {
   ScrollView,
   NativeScrollEvent,
   NativeSyntheticEvent,
-  View,
 } from 'react-native';
-import Shimmer from 'react-native-shimmer';
 import {useInfiniteQuery} from 'react-query';
 import {ExhibitionsShimmer} from '~components/shimmers/ExhibitionsShimmer';
 import {artService} from '~services/artService';
 import {Colors, defaultColorMode} from '~utils/colors';
-import { measure } from '~utils/measure';
+import {measure} from '~utils/measure';
 import {
   Container,
   Header,
@@ -26,13 +24,35 @@ import {
   ItemTitle,
   LoadingCaption,
   SubHeader,
+  TimerCaption,
 } from './Exhibitions.styled';
 
 type Props = {};
 
 export const Exhibitions = ({}: Props) => {
+  const nextExhibitionDate = new Date(2022, 12, 25, 15, 35);
+  const [timerLabel, setTimerLabel] = React.useState(null);
+
+  const timer = React.useRef<number | undefined>(undefined);
   const currentMode = useColorScheme();
   const isDarkMode = currentMode === 'dark';
+
+  const getTimerLabel = () => {
+    const now = new Date();
+    const dateDiff = nextExhibitionDate.getTime() - now.getTime();
+    const days = Math.floor(dateDiff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor(
+      (dateDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+    );
+    const minutes = Math.floor((dateDiff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((dateDiff % (1000 * 60)) / 1000);
+
+    return `${days}d ${hours}h ${minutes}min ${seconds}sec`;
+  };
+
+  React.useEffect(() => {
+    timer.current = setInterval(() => setTimerLabel(getTimerLabel()), 1000);
+  }, [getTimerLabel]);
 
   const backgroundStyle = {
     backgroundColor: Colors[currentMode || defaultColorMode],
@@ -42,7 +62,7 @@ export const Exhibitions = ({}: Props) => {
     ['artworks', 'collections/exhibitions'],
     ({pageParam = 1}) =>
       artService.fetch('collections/exhibitions', {
-        limit: '10',
+        limit: '50',
         page: pageParam,
       }),
     {getNextPageParam: page => page.pagination.current_page + 1},
@@ -85,6 +105,9 @@ export const Exhibitions = ({}: Props) => {
           <SubHeader color={isDarkMode ? Colors.light : Colors.dark}>
             Available Exhibitions
           </SubHeader>
+          {!!timerLabel && (
+            <TimerCaption>{`Time until our next exhibition: \n${timerLabel}`}</TimerCaption>
+          )}
           {getExhibitionsArray() === null ? (
             <ExhibitionsShimmer colorMode={currentMode} />
           ) : (

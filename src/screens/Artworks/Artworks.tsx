@@ -29,7 +29,7 @@ export const Artworks = ({}: Props) => {
   const backgroundStyle = {
     backgroundColor: Colors[currentMode || defaultColorMode],
   };
-  const queryOptions = {limit: '15'};
+  const queryOptions = {limit: '50'};
   const {data} = useQuery<any>(
     ['artworks', 'collections/artworks', queryOptions],
     () => artService.fetch('collections/artworks', queryOptions),
