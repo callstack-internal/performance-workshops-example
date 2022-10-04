@@ -15,6 +15,7 @@ import {useInfiniteQuery} from 'react-query';
 import {ExhibitionsShimmer} from '~components/shimmers/ExhibitionsShimmer';
 import {artService} from '~services/artService';
 import {Colors, defaultColorMode} from '~utils/colors';
+import { measure } from '~utils/measure';
 import {
   Container,
   Header,
@@ -71,49 +72,51 @@ export const Exhibitions = ({}: Props) => {
   }, [data?.pages]);
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <Container>
-        <Header color={isDarkMode ? Colors.light : Colors.dark}>
-          Chicago Art Museum
-        </Header>
-        <SubHeader color={isDarkMode ? Colors.light : Colors.dark}>
-          Available Exhibitions
-        </SubHeader>
-        {getExhibitionsArray() === null ? (
-          <ExhibitionsShimmer colorMode={currentMode} />
-        ) : (
-          <ScrollView onMomentumScrollEnd={handleOnScrollEnd}>
-            {getExhibitionsArray()?.map((item: any) => (
-              <Item key={item.id}>
-                <ItemTitle color={isDarkMode ? Colors.light : Colors.dark}>
-                  {item?.title}
-                </ItemTitle>
-                <ItemDescription
-                  color={isDarkMode ? Colors.light : Colors.dark}>
-                  {item?.short_description}
-                </ItemDescription>
-                <ItemImagePlaceholder
-                  isDark={isDarkMode}
-                  source={{uri: item?.image_url}}
-                />
-                {item.web_url ? (
-                  <TouchableOpacity
-                    onPress={() => Linking.openURL(item.web_url)}>
-                    <ItemLinkButton>See more</ItemLinkButton>
-                  </TouchableOpacity>
-                ) : null}
-              </Item>
-            ))}
-          </ScrollView>
-        )}
-        {isFetchingNextPage ? (
-          <LoadingCaption>Loading More Exhibitions...</LoadingCaption>
-        ) : null}
-      </Container>
-    </SafeAreaView>
+    <React.Profiler id="Tab:Exhibitions" onRender={measure.onRender}>
+      <SafeAreaView style={backgroundStyle}>
+        <StatusBar
+          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+          backgroundColor={backgroundStyle.backgroundColor}
+        />
+        <Container>
+          <Header color={isDarkMode ? Colors.light : Colors.dark}>
+            Chicago Art Museum
+          </Header>
+          <SubHeader color={isDarkMode ? Colors.light : Colors.dark}>
+            Available Exhibitions
+          </SubHeader>
+          {getExhibitionsArray() === null ? (
+            <ExhibitionsShimmer colorMode={currentMode} />
+          ) : (
+            <ScrollView onMomentumScrollEnd={handleOnScrollEnd}>
+              {getExhibitionsArray()?.map((item: any) => (
+                <Item key={item.id}>
+                  <ItemTitle color={isDarkMode ? Colors.light : Colors.dark}>
+                    {item?.title}
+                  </ItemTitle>
+                  <ItemDescription
+                    color={isDarkMode ? Colors.light : Colors.dark}>
+                    {item?.short_description}
+                  </ItemDescription>
+                  <ItemImagePlaceholder
+                    isDark={isDarkMode}
+                    source={{uri: item?.image_url}}
+                  />
+                  {item.web_url ? (
+                    <TouchableOpacity
+                      onPress={() => Linking.openURL(item.web_url)}>
+                      <ItemLinkButton>See more</ItemLinkButton>
+                    </TouchableOpacity>
+                  ) : null}
+                </Item>
+              ))}
+            </ScrollView>
+          )}
+          {isFetchingNextPage ? (
+            <LoadingCaption>Loading More Exhibitions...</LoadingCaption>
+          ) : null}
+        </Container>
+      </SafeAreaView>
+    </React.Profiler>
   );
 };

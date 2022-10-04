@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Welcome} from '~screens/Welcome/Welcome';
+import {About} from '~screens/About/About';
 import {StyleSheet, useColorScheme} from 'react-native';
 import {Colors, defaultColorMode} from '~utils/colors';
 import {Artworks, Exhibitions} from '~screens';
@@ -15,7 +15,7 @@ export const BottomTabNavigator = () => {
 
   return (
     <Tab.Navigator
-      initialRouteName="Welcome"
+      initialRouteName="Exhibitions"
       screenOptions={() => ({
         headerStyle: {
           backgroundColor: Colors[currentMode || defaultColorMode],
@@ -31,14 +31,15 @@ export const BottomTabNavigator = () => {
         tabBarIcon: Noop,
         tabBarLabelStyle: styles.tabBarLabel,
         tabBarItemStyle: styles.tabBarItem,
+        lazy: false,
       })}>
-      <Tab.Screen
-        name="Welcome"
-        component={Welcome}
-        options={() => ({header: Noop})}
-      />
       <Tab.Screen name="Exhibitions" component={Exhibitions} />
       <Tab.Screen name="Artworks" component={Artworks} />
+      <Tab.Screen
+        name="About"
+        component={About}
+        options={() => ({header: Noop})}
+      />
     </Tab.Navigator>
   );
 };
