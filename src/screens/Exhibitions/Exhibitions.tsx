@@ -8,13 +8,11 @@ import {
   ScrollView,
   NativeScrollEvent,
   NativeSyntheticEvent,
-  View,
 } from 'react-native';
-import Shimmer from 'react-native-shimmer';
 import {useInfiniteQuery} from 'react-query';
 import {ExhibitionsShimmer} from '~components/shimmers/ExhibitionsShimmer';
 import {artService} from '~services/artService';
-import {Colors, defaultColorMode} from '~utils/colors';
+import {colors} from '~utils/colors';
 import {
   Container,
   Header,
@@ -25,23 +23,49 @@ import {
   ItemTitle,
   LoadingCaption,
   SubHeader,
+  TimerCaption,
 } from './Exhibitions.styled';
 
 type Props = {};
 
 export const Exhibitions = ({}: Props) => {
-  const currentMode = useColorScheme();
+  const nextExhibitionDate = new Date(2022, 12, 25, 15, 35);
+  const [timerLabel, setTimerLabel] = React.useState<string | null>(null);
+
+  const timer = React.useRef<number | undefined>(undefined);
+  const currentMode: 'light' | 'dark' = useColorScheme() || 'dark';
   const isDarkMode = currentMode === 'dark';
 
-  const backgroundStyle = {
-    backgroundColor: Colors[currentMode || defaultColorMode],
+  const formatTimeLeft = () => {
+    const now = new Date();
+    const dateDiff = nextExhibitionDate.getTime() - now.getTime();
+    const days = Math.floor(dateDiff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor(
+      (dateDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+    );
+    const minutes = Math.floor((dateDiff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((dateDiff % (1000 * 60)) / 1000);
+
+    return `${days}d ${hours}h ${minutes}min ${seconds}sec`;
   };
+
+  const backgroundStyle = {
+    backgroundColor: colors[currentMode].background,
+  };
+
+  React.useEffect(() => {
+    timer.current = setInterval(() => setTimerLabel(formatTimeLeft()), 1000);
+
+    return () => {
+      timer.current && clearInterval(timer.current);
+    };
+  }, [formatTimeLeft]);
 
   const {data, fetchNextPage, isFetchingNextPage} = useInfiniteQuery<any>(
     ['artworks', 'collections/exhibitions'],
     ({pageParam = 1}) =>
       artService.fetch('collections/exhibitions', {
-        limit: '10',
+        limit: '50',
         page: pageParam,
       }),
     {getNextPageParam: page => page.pagination.current_page + 1},
@@ -77,23 +101,23 @@ export const Exhibitions = ({}: Props) => {
         backgroundColor={backgroundStyle.backgroundColor}
       />
       <Container>
-        <Header color={isDarkMode ? Colors.light : Colors.dark}>
-          Chicago Art Museum
-        </Header>
-        <SubHeader color={isDarkMode ? Colors.light : Colors.dark}>
+        <Header color={colors[currentMode].text}>Chicago Art Museum</Header>
+        <SubHeader color={colors[currentMode].text}>
           Available Exhibitions
         </SubHeader>
+        {!!timerLabel && (
+          <TimerCaption>{`Time until our next exhibition: \n${timerLabel}`}</TimerCaption>
+        )}
         {getExhibitionsArray() === null ? (
           <ExhibitionsShimmer colorMode={currentMode} />
         ) : (
           <ScrollView onMomentumScrollEnd={handleOnScrollEnd}>
             {getExhibitionsArray()?.map((item: any) => (
               <Item key={item.id}>
-                <ItemTitle color={isDarkMode ? Colors.light : Colors.dark}>
+                <ItemTitle color={colors[currentMode].text}>
                   {item?.title}
                 </ItemTitle>
-                <ItemDescription
-                  color={isDarkMode ? Colors.light : Colors.dark}>
+                <ItemDescription color={colors[currentMode].text}>
                   {item?.short_description}
                 </ItemDescription>
                 <ItemImagePlaceholder

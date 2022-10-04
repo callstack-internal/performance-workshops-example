@@ -8,7 +8,7 @@ import {
 import {useQuery} from 'react-query';
 import {ArtworksShimmer} from '~components';
 import {artService} from '~services/artService';
-import {Colors, defaultColorMode} from '~utils/colors';
+import {colors, defaultColorMode} from '~utils/colors';
 import {
   Container,
   Header,
@@ -19,16 +19,14 @@ import {
   SubHeader,
 } from './Artworks.styled';
 
-type Props = {};
-
-export const Artworks = ({}: Props) => {
-  const currentMode = useColorScheme();
+export const Artworks = () => {
+  const currentMode: 'light' | 'dark' = useColorScheme() || 'dark';
   const isDarkMode = currentMode === 'dark';
 
   const backgroundStyle = {
-    backgroundColor: Colors[currentMode || defaultColorMode],
+    backgroundColor: colors[currentMode || defaultColorMode].background,
   };
-  const queryOptions = {limit: '15'};
+  const queryOptions = {limit: '50'};
   const {data} = useQuery<any>(
     ['artworks', 'collections/artworks', queryOptions],
     () => artService.fetch('collections/artworks', queryOptions),
@@ -41,10 +39,8 @@ export const Artworks = ({}: Props) => {
         backgroundColor={backgroundStyle.backgroundColor}
       />
       <Container>
-        <Header color={isDarkMode ? Colors.light : Colors.dark}>
-          Chicago Art Museum
-        </Header>
-        <SubHeader color={isDarkMode ? Colors.light : Colors.dark}>
+        <Header color={colors[currentMode].text}>Chicago Art Museum</Header>
+        <SubHeader color={colors[currentMode].text}>
           Enjoy some random artpieces from the museum
         </SubHeader>
         {!data ? (
@@ -53,11 +49,10 @@ export const Artworks = ({}: Props) => {
           <ScrollView>
             {data?.data?.map((item: any) => (
               <Item key={item.id}>
-                <ItemTitle color={isDarkMode ? Colors.light : Colors.dark}>
+                <ItemTitle color={colors[currentMode].text}>
                   {item?.title}
                 </ItemTitle>
-                <ItemDescription
-                  color={isDarkMode ? Colors.light : Colors.dark}>
+                <ItemDescription color={colors[currentMode].text}>
                   {item?.thumbnail?.alt_text}
                 </ItemDescription>
                 <ItemImagePlaceholder

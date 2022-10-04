@@ -23,6 +23,10 @@ export const SubHeader = styled.Text`
   color: ${({color}) => color};
 `;
 
+export const TimerCaption = styled(SubHeader)`
+  color: #ed9e30;
+`;
+
 export const Item = styled.View`
   padding: 4px 8px;
   margin-bottom: 16px;

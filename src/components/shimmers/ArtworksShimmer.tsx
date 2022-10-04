@@ -1,12 +1,12 @@
 import * as React from 'react';
-import {ColorSchemeName} from 'react-native';
+import styled from 'styled-components/native';
 import LinearGradient from 'react-native-linear-gradient';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
-import styled from 'styled-components/native';
-import {shimmerColors} from '~utils/colors';
+
+import {colors} from '~utils/colors';
 
 type Props = {
-  colorMode?: ColorSchemeName;
+  colorMode: 'dark' | 'light';
 };
 
 export const ArtworksShimmer = ({colorMode}: Props) => {
@@ -18,23 +18,23 @@ export const ArtworksShimmer = ({colorMode}: Props) => {
         <ShimmerContainer key={item}>
           <ShimmerTitle
             shimmerColors={[
-              shimmerColors[colorMode]?.background,
-              shimmerColors[colorMode]?.highlight,
-              shimmerColors[colorMode]?.background,
+              colors[colorMode].shimmer_background,
+              colors[colorMode].shimmer_highlight,
+              colors[colorMode].shimmer_background,
             ]}
           />
           <ShimmerDescription
             shimmerColors={[
-              shimmerColors[colorMode]?.background,
-              shimmerColors[colorMode]?.highlight,
-              shimmerColors[colorMode]?.background,
+              colors[colorMode].shimmer_background,
+              colors[colorMode].shimmer_highlight,
+              colors[colorMode].shimmer_background,
             ]}
           />
           <ShimmerImage
             shimmerColors={[
-              shimmerColors[colorMode]?.background,
-              shimmerColors[colorMode]?.highlight,
-              shimmerColors[colorMode]?.background,
+              colors[colorMode].shimmer_background,
+              colors[colorMode].shimmer_highlight,
+              colors[colorMode].shimmer_background,
             ]}
           />
         </ShimmerContainer>

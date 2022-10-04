@@ -2,19 +2,13 @@ import MaskedView from '@react-native-masked-view/masked-view';
 import React from 'react';
 import {LayoutChangeEvent} from 'react-native';
 
-import {
-  AnimatedGradientOverlay,
-  MaskContainer,
-  useAnimatedGradientAlt,
-} from './components';
+import {AnimatedGradientOverlay, MaskContainer} from './components';
 import {defaultColors} from './styles';
 import {
   ShimmerEffectProviderBaseProps,
   ShimmerEffectProviderProps,
   Layout,
 } from './typings';
-
-const DURATION = 800;
 
 const ShimmerEffectProviderBase = ({
   children,

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Welcome} from '~screens/Welcome/Welcome';
+import {About} from '~screens';
 import {StyleSheet, useColorScheme} from 'react-native';
-import {Colors, defaultColorMode} from '~utils/colors';
+import {colors} from '~utils/colors';
 import {Artworks, Exhibitions} from '~screens';
 
 const Tab = createBottomTabNavigator();
@@ -10,35 +10,34 @@ const Tab = createBottomTabNavigator();
 const Noop = () => null;
 
 export const BottomTabNavigator = () => {
-  const currentMode = useColorScheme();
-  const isDarkMode = currentMode === 'dark';
+  const currentMode: 'dark' | 'light' = useColorScheme() || 'dark';
 
   return (
     <Tab.Navigator
-      initialRouteName="Welcome"
+      initialRouteName="Exhibitions"
       screenOptions={() => ({
         headerStyle: {
-          backgroundColor: Colors[currentMode || defaultColorMode],
+          backgroundColor: colors[currentMode].background,
         },
         headerTitleAlign: 'center',
         headerTitleStyle: {
-          color: isDarkMode ? Colors.light : Colors.dark,
+          color: colors[currentMode].text,
         },
         headerShadowVisible: false,
         tabBarStyle: {
-          backgroundColor: Colors[currentMode || defaultColorMode],
+          backgroundColor: colors[currentMode].background,
         },
         tabBarIcon: Noop,
         tabBarLabelStyle: styles.tabBarLabel,
         tabBarItemStyle: styles.tabBarItem,
       })}>
-      <Tab.Screen
-        name="Welcome"
-        component={Welcome}
-        options={() => ({header: Noop})}
-      />
       <Tab.Screen name="Exhibitions" component={Exhibitions} />
       <Tab.Screen name="Artworks" component={Artworks} />
+      <Tab.Screen
+        name="About"
+        component={About}
+        options={() => ({header: Noop})}
+      />
     </Tab.Navigator>
   );
 };

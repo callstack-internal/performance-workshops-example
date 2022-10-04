@@ -1,5 +1,5 @@
 import {Artworks} from './Artworks/Artworks';
 import {Exhibitions} from './Exhibitions/Exhibitions';
-import {Welcome} from './Welcome/Welcome';
+import {About} from './About/About';
 
-export {Artworks, Exhibitions, Welcome};
+export {Artworks, Exhibitions, About};
