@@ -8,7 +8,7 @@ import {
 import {useQuery} from 'react-query';
 import {ArtworksShimmer} from '~components';
 import {artService} from '~services/artService';
-import {colors, defaultColorMode} from '~utils/colors';
+import {colors} from '~utils/colors';
 import {
   Container,
   Header,
@@ -24,7 +24,7 @@ export const Artworks = () => {
   const isDarkMode = currentMode === 'dark';
 
   const backgroundStyle = {
-    backgroundColor: colors[currentMode || defaultColorMode].background,
+    backgroundColor: colors[currentMode].background,
   };
   const queryOptions = {limit: '50'};
   const {data} = useQuery<any>(

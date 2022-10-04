@@ -1,9 +1,8 @@
 import * as React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {About} from '~screens';
 import {StyleSheet, useColorScheme} from 'react-native';
 import {colors} from '~utils/colors';
-import {Artworks, Exhibitions} from '~screens';
+import {About, Artworks, Exhibitions} from '~screens';
 
 const Tab = createBottomTabNavigator();
 
@@ -30,6 +29,7 @@ export const BottomTabNavigator = () => {
         tabBarIcon: Noop,
         tabBarLabelStyle: styles.tabBarLabel,
         tabBarItemStyle: styles.tabBarItem,
+        lazy: false,
       })}>
       <Tab.Screen name="Exhibitions" component={Exhibitions} />
       <Tab.Screen name="Artworks" component={Artworks} />
