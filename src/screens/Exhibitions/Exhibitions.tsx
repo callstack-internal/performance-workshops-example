@@ -5,11 +5,10 @@ import {
   StatusBar,
   TouchableOpacity,
   Linking,
-  ScrollView,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
+  FlatList,
 } from 'react-native';
 import {useInfiniteQuery} from 'react-query';
+import {NextExhibitionTimer} from '~components';
 import {ExhibitionsShimmer} from '~components/shimmers/ExhibitionsShimmer';
 import {artService} from '~services/artService';
 import {Colors, defaultColorMode} from '~utils/colors';
@@ -24,35 +23,17 @@ import {
   ItemTitle,
   LoadingCaption,
   SubHeader,
-  TimerCaption,
 } from './Exhibitions.styled';
 
 type Props = {};
+type ItemProps = {
+  item: any;
+  isDarkMode: boolean;
+};
 
 export const Exhibitions = ({}: Props) => {
-  const nextExhibitionDate = new Date(2022, 12, 25, 15, 35);
-  const [timerLabel, setTimerLabel] = React.useState(null);
-
-  const timer = React.useRef<number | undefined>(undefined);
   const currentMode = useColorScheme();
   const isDarkMode = currentMode === 'dark';
-
-  const getTimerLabel = () => {
-    const now = new Date();
-    const dateDiff = nextExhibitionDate.getTime() - now.getTime();
-    const days = Math.floor(dateDiff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor(
-      (dateDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-    );
-    const minutes = Math.floor((dateDiff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((dateDiff % (1000 * 60)) / 1000);
-
-    return `${days}d ${hours}h ${minutes}min ${seconds}sec`;
-  };
-
-  React.useEffect(() => {
-    timer.current = setInterval(() => setTimerLabel(getTimerLabel()), 1000);
-  }, [getTimerLabel]);
 
   const backgroundStyle = {
     backgroundColor: Colors[currentMode || defaultColorMode],
@@ -62,22 +43,11 @@ export const Exhibitions = ({}: Props) => {
     ['artworks', 'collections/exhibitions'],
     ({pageParam = 1}) =>
       artService.fetch('collections/exhibitions', {
-        limit: '50',
+        limit: '10',
         page: pageParam,
       }),
     {getNextPageParam: page => page.pagination.current_page + 1},
   );
-
-  const handleOnScrollEnd = (evt: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const offsetTop = evt.nativeEvent.contentOffset.y;
-    const contentHeight = evt.nativeEvent.contentSize.height;
-    const layoutHeight = evt.nativeEvent.layoutMeasurement.height;
-    const shouldRefetch = offsetTop >= contentHeight - layoutHeight - 200;
-
-    if (shouldRefetch) {
-      fetchNextPage();
-    }
-  };
 
   const getExhibitionsArray = React.useCallback<() => any[] | null>(() => {
     if (!data?.pages.length) {
@@ -105,35 +75,21 @@ export const Exhibitions = ({}: Props) => {
           <SubHeader color={isDarkMode ? Colors.light : Colors.dark}>
             Available Exhibitions
           </SubHeader>
-          {!!timerLabel && (
-            <TimerCaption>{`Time until our next exhibition: \n${timerLabel}`}</TimerCaption>
-          )}
+          <NextExhibitionTimer />
           {getExhibitionsArray() === null ? (
             <ExhibitionsShimmer colorMode={currentMode} />
           ) : (
-            <ScrollView onMomentumScrollEnd={handleOnScrollEnd}>
-              {getExhibitionsArray()?.map((item: any) => (
-                <Item key={item.id}>
-                  <ItemTitle color={isDarkMode ? Colors.light : Colors.dark}>
-                    {item?.title}
-                  </ItemTitle>
-                  <ItemDescription
-                    color={isDarkMode ? Colors.light : Colors.dark}>
-                    {item?.short_description}
-                  </ItemDescription>
-                  <ItemImagePlaceholder
-                    isDark={isDarkMode}
-                    source={{uri: item?.image_url}}
-                  />
-                  {item.web_url ? (
-                    <TouchableOpacity
-                      onPress={() => Linking.openURL(item.web_url)}>
-                      <ItemLinkButton>See more</ItemLinkButton>
-                    </TouchableOpacity>
-                  ) : null}
-                </Item>
-              ))}
-            </ScrollView>
+            <FlatList
+              windowSize={2}
+              initialNumToRender={4}
+              onEndReachedThreshold={80}
+              data={getExhibitionsArray()}
+              onEndReached={() => fetchNextPage()}
+              keyExtractor={item => item.id}
+              renderItem={({item}) => (
+                <Exhibition item={item} isDarkMode={isDarkMode} />
+              )}
+            />
           )}
           {isFetchingNextPage ? (
             <LoadingCaption>Loading More Exhibitions...</LoadingCaption>
@@ -143,3 +99,27 @@ export const Exhibitions = ({}: Props) => {
     </React.Profiler>
   );
 };
+
+const Exhibition = React.memo(({item, isDarkMode}: ItemProps) => {
+  const onPressLink = () => !!item?.web_url && Linking.openURL(item.web_url);
+
+  return (
+    <Item key={item?.id}>
+      <ItemTitle color={isDarkMode ? Colors.light : Colors.dark}>
+        {item?.title}
+      </ItemTitle>
+      <ItemDescription color={isDarkMode ? Colors.light : Colors.dark}>
+        {item?.short_description}
+      </ItemDescription>
+      <ItemImagePlaceholder
+        isDark={isDarkMode}
+        source={{uri: item?.image_url}}
+      />
+      {item?.web_url ? (
+        <TouchableOpacity onPress={onPressLink}>
+          <ItemLinkButton>See more</ItemLinkButton>
+        </TouchableOpacity>
+      ) : null}
+    </Item>
+  );
+});
