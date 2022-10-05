@@ -35,9 +35,17 @@ type ItemProps = {
 export const Exhibitions = withProfiler('Tab:Exhibitions', ({}: Props) => {
   const currentMode: 'light' | 'dark' = useColorScheme() || 'dark';
 
-  const backgroundStyle = {
-    backgroundColor: colors[currentMode].background,
-  };
+  const barStyle = React.useMemo(
+    () => (currentMode === 'dark' ? 'light-content' : 'dark-content'),
+    [currentMode],
+  );
+
+  const backgroundStyle = React.useMemo(
+    () => ({
+      backgroundColor: colors[currentMode].background,
+    }),
+    [currentMode],
+  );
 
   const {data, fetchNextPage, isFetchingNextPage} = useInfiniteQuery<any>(
     ['artworks', 'collections/exhibitions'],
@@ -49,7 +57,7 @@ export const Exhibitions = withProfiler('Tab:Exhibitions', ({}: Props) => {
     {getNextPageParam: page => page.pagination.current_page + 1},
   );
 
-  const getExhibitionsArray = () => {
+  const getExhibitionsArray = React.useCallback<() => any[] | null>(() => {
     if (!data?.pages.length) {
       return null;
     }
@@ -59,12 +67,12 @@ export const Exhibitions = withProfiler('Tab:Exhibitions', ({}: Props) => {
     );
 
     return result;
-  };
+  }, [data]);
 
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar
-        barStyle={currentMode === 'dark' ? 'light-content' : 'dark-content'}
+        barStyle={barStyle}
         backgroundColor={backgroundStyle.backgroundColor}
       />
       <Container>
@@ -96,8 +104,11 @@ export const Exhibitions = withProfiler('Tab:Exhibitions', ({}: Props) => {
   );
 });
 
-const Exhibition = ({item, currentMode}: ItemProps) => {
-  const onPressLink = () => !!item?.web_url && Linking.openURL(item.web_url);
+const Exhibition = React.memo(({item, currentMode}: ItemProps) => {
+  const onPressLink = React.useCallback(
+    () => !!item?.web_url && Linking.openURL(item.web_url),
+    [item?.web_url],
+  );
 
   return (
     <Item key={item?.id}>
@@ -117,4 +128,4 @@ const Exhibition = ({item, currentMode}: ItemProps) => {
       ) : null}
     </Item>
   );
-};
+});

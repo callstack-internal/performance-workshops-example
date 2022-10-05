@@ -9,7 +9,7 @@ export const NextExhibitionTimer = () => {
     [],
   );
 
-  const formatTimeLeft = () => {
+  const formatTimeLeft = React.useCallback(() => {
     const now = new Date();
     const dateDiff = nextExhibitionDate.getTime() - now.getTime();
     const days = Math.floor(dateDiff / (1000 * 60 * 60 * 24));
@@ -20,10 +20,16 @@ export const NextExhibitionTimer = () => {
     const seconds = Math.floor((dateDiff % (1000 * 60)) / 1000);
 
     return `${days}d ${hours}h ${minutes}min ${seconds}sec`;
-  };
+  }, [nextExhibitionDate]);
 
   React.useEffect(() => {
     timer.current = setInterval(() => setTimerLabel(formatTimeLeft()), 5000);
+
+    return () => {
+      if (timer.current) {
+        clearInterval(timer.current);
+      }
+    };
   }, [formatTimeLeft]);
 
   return timerLabel ? (
