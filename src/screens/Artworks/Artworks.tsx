@@ -24,11 +24,20 @@ type ItemProps = {
 export const Artworks = withProfiler('Tab:Artworks', () => {
   const currentMode: 'light' | 'dark' = useColorScheme() || 'dark';
   const isDarkMode = currentMode === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: colors[currentMode].background,
-  };
   const queryOptions = {limit: '50'};
+
+  const backgroundStyle = React.useMemo(
+    () => ({
+      backgroundColor: colors[currentMode].background,
+    }),
+    [currentMode],
+  );
+
+  const barStyle = React.useMemo(
+    () => (isDarkMode ? 'light-content' : 'dark-content'),
+    [isDarkMode],
+  );
+
   const {data} = useQuery<any>(
     ['artworks', 'collections/artworks', queryOptions],
     () => artService.fetch('collections/artworks', queryOptions),
@@ -37,7 +46,7 @@ export const Artworks = withProfiler('Tab:Artworks', () => {
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+        barStyle={barStyle}
         backgroundColor={backgroundStyle.backgroundColor}
       />
       <Container>
@@ -64,7 +73,7 @@ export const Artworks = withProfiler('Tab:Artworks', () => {
   );
 });
 
-const Artwork = ({item, currentMode}: ItemProps) => (
+const Artwork = React.memo(({item, currentMode}: ItemProps) => (
   <Item key={item.id}>
     <ItemTitle color={colors[currentMode].text}>{item?.title}</ItemTitle>
     <ItemDescription color={colors[currentMode].text}>
@@ -79,4 +88,4 @@ const Artwork = ({item, currentMode}: ItemProps) => (
       resizeMode={FastImage.resizeMode.cover}
     />
   </Item>
-);
+));
