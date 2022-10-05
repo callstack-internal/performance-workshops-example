@@ -9,6 +9,7 @@ import {useQuery} from 'react-query';
 import {ArtworksShimmer} from '~components';
 import {artService} from '~services/artService';
 import {colors} from '~utils/colors';
+import {withProfiler} from '~utils/measure';
 import {
   Container,
   Header,
@@ -19,7 +20,7 @@ import {
   SubHeader,
 } from './Artworks.styled';
 
-export const Artworks = () => {
+export const Artworks = withProfiler('Tab:Artworks', () => {
   const currentMode: 'light' | 'dark' = useColorScheme() || 'dark';
   const isDarkMode = currentMode === 'dark';
 
@@ -68,4 +69,4 @@ export const Artworks = () => {
       </Container>
     </SafeAreaView>
   );
-};
+});
