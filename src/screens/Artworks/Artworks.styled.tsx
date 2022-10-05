@@ -1,3 +1,4 @@
+import FastImage from 'react-native-fast-image';
 import styled from 'styled-components/native';
 
 export const Container = styled.View`
@@ -39,7 +40,7 @@ export const ItemDescription = styled.Text`
   color: ${({color}) => color};
 `;
 
-export const ItemImagePlaceholder = styled.Image`
+export const ItemImagePlaceholder = styled(FastImage)`
   height: 200px;
   width: 100%;
   background-color: ${({isDark}) => (isDark ? '#454545' : '#C5C5C5')};

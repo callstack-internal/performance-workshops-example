@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {useColorScheme, SafeAreaView, StatusBar, FlatList} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {useQuery} from 'react-query';
 import {ArtworksShimmer} from '~components';
 import {artService} from '~services/artService';
@@ -73,7 +74,9 @@ const Artwork = ({item, currentMode}: ItemProps) => (
       isDark={currentMode === 'dark'}
       source={{
         uri: `https://www.artic.edu/iiif/2/${item?.image_id}/full/1680,/0/default.jpg`,
+        priority: FastImage.priority.low,
       }}
+      resizeMode={FastImage.resizeMode.cover}
     />
   </Item>
 );
