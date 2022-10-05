@@ -13,6 +13,7 @@ import {useInfiniteQuery} from 'react-query';
 import {ExhibitionsShimmer} from '~components/shimmers';
 import {artService} from '~services/artService';
 import {colors} from '~utils/colors';
+import {withProfiler} from '~utils/measure';
 import {
   Container,
   Header,
@@ -30,7 +31,7 @@ type Props = {};
 
 const newExhibitionDate = new Date(2022, 12, 25, 15, 35);
 
-export const Exhibitions = ({}: Props) => {
+export const Exhibitions = withProfiler('Tab:Exhibitions', ({}: Props) => {
   const [timerLabel, setTimerLabel] = React.useState<string | null>(null);
 
   const timer = React.useRef<number | undefined>(undefined);
@@ -131,7 +132,7 @@ export const Exhibitions = ({}: Props) => {
       </Container>
     </SafeAreaView>
   );
-};
+});
 
 const formatTimeLeft = (date: Date) => {
   const now = new Date();

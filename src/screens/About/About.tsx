@@ -4,8 +4,9 @@ import {useColorScheme, SafeAreaView, StatusBar} from 'react-native';
 import {Container, Header, Paragraph, SubHeader} from './About.styled';
 
 import {colors} from '~utils/colors';
+import {withProfiler} from '~utils/measure';
 
-export const About = () => {
+export const About = withProfiler('Tab:About', () => {
   const currentMode: 'dark' | 'light' = useColorScheme() || 'dark';
   const isDarkMode = currentMode === 'dark';
 
@@ -44,4 +45,4 @@ export const About = () => {
       </Container>
     </SafeAreaView>
   );
-};
+});
