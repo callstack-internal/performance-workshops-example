@@ -28,38 +28,29 @@ import {
 
 type Props = {};
 
+const newExhibitionDate = new Date(2022, 12, 25, 15, 35);
+
 export const Exhibitions = ({}: Props) => {
-  const nextExhibitionDate = new Date(2022, 12, 25, 15, 35);
   const [timerLabel, setTimerLabel] = React.useState<string | null>(null);
 
   const timer = React.useRef<number | undefined>(undefined);
   const currentMode: 'light' | 'dark' = useColorScheme() || 'dark';
   const isDarkMode = currentMode === 'dark';
 
-  const formatTimeLeft = () => {
-    const now = new Date();
-    const dateDiff = nextExhibitionDate.getTime() - now.getTime();
-    const days = Math.floor(dateDiff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor(
-      (dateDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-    );
-    const minutes = Math.floor((dateDiff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((dateDiff % (1000 * 60)) / 1000);
-
-    return `${days}d ${hours}h ${minutes}min ${seconds}sec`;
-  };
-
   const backgroundStyle = {
     backgroundColor: colors[currentMode].background,
   };
 
   React.useEffect(() => {
-    timer.current = setInterval(() => setTimerLabel(formatTimeLeft()), 1000);
+    timer.current = setInterval(
+      () => setTimerLabel(formatTimeLeft(newExhibitionDate)),
+      5000,
+    );
 
     return () => {
       timer.current && clearInterval(timer.current);
     };
-  }, [formatTimeLeft]);
+  }, []);
 
   const {data, fetchNextPage, isFetchingNextPage} = useInfiniteQuery<any>(
     ['artworks', 'collections/exhibitions'],
@@ -140,4 +131,17 @@ export const Exhibitions = ({}: Props) => {
       </Container>
     </SafeAreaView>
   );
+};
+
+const formatTimeLeft = (date: Date) => {
+  const now = new Date();
+  const dateDiff = date.getTime() - now.getTime();
+  const days = Math.floor(dateDiff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor(
+    (dateDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+  );
+  const minutes = Math.floor((dateDiff % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((dateDiff % (1000 * 60)) / 1000);
+
+  return `${days}d ${hours}h ${minutes}min ${seconds}sec`;
 };
