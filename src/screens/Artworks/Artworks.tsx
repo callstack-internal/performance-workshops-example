@@ -9,6 +9,7 @@ import {useQuery} from 'react-query';
 import {ArtworksShimmer} from '~components';
 import {artService} from '~services/artService';
 import {colors} from '~utils/colors';
+import {measure} from '~utils/measure';
 import {
   Container,
   Header,
@@ -33,39 +34,41 @@ export const Artworks = () => {
   );
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <Container>
-        <Header color={colors[currentMode].text}>Chicago Art Museum</Header>
-        <SubHeader color={colors[currentMode].text}>
-          Enjoy some random artpieces from the museum
-        </SubHeader>
-        {!data ? (
-          <ArtworksShimmer colorMode={currentMode} />
-        ) : (
-          <ScrollView>
-            {data?.data?.map((item: any) => (
-              <Item key={item.id}>
-                <ItemTitle color={colors[currentMode].text}>
-                  {item?.title}
-                </ItemTitle>
-                <ItemDescription color={colors[currentMode].text}>
-                  {item?.thumbnail?.alt_text}
-                </ItemDescription>
-                <ItemImagePlaceholder
-                  isDark={isDarkMode}
-                  source={{
-                    uri: `https://www.artic.edu/iiif/2/${item?.image_id}/full/1680,/0/default.jpg`,
-                  }}
-                />
-              </Item>
-            ))}
-          </ScrollView>
-        )}
-      </Container>
-    </SafeAreaView>
+    <React.Profiler id="Tab:Artworks" onRender={measure.onRender}>
+      <SafeAreaView style={backgroundStyle}>
+        <StatusBar
+          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+          backgroundColor={backgroundStyle.backgroundColor}
+        />
+        <Container>
+          <Header color={colors[currentMode].text}>Chicago Art Museum</Header>
+          <SubHeader color={colors[currentMode].text}>
+            Enjoy some random artpieces from the museum
+          </SubHeader>
+          {!data ? (
+            <ArtworksShimmer colorMode={currentMode} />
+          ) : (
+            <ScrollView>
+              {data?.data?.map((item: any) => (
+                <Item key={item.id}>
+                  <ItemTitle color={colors[currentMode].text}>
+                    {item?.title}
+                  </ItemTitle>
+                  <ItemDescription color={colors[currentMode].text}>
+                    {item?.thumbnail?.alt_text}
+                  </ItemDescription>
+                  <ItemImagePlaceholder
+                    isDark={isDarkMode}
+                    source={{
+                      uri: `https://www.artic.edu/iiif/2/${item?.image_id}/full/1680,/0/default.jpg`,
+                    }}
+                  />
+                </Item>
+              ))}
+            </ScrollView>
+          )}
+        </Container>
+      </SafeAreaView>
+    </React.Profiler>
   );
 };
