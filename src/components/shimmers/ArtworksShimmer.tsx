@@ -1,9 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components/native';
-import LinearGradient from 'react-native-linear-gradient';
-import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 
 import {colors} from '~utils/colors';
+import {ShimmerEffectProvider} from './shimmer-effect-provider';
 
 type Props = {
   colorMode: 'dark' | 'light';
@@ -12,44 +11,27 @@ type Props = {
 const protoArray = [1, 2, 3];
 
 export const ArtworksShimmer = React.memo(({colorMode}: Props) => (
-  <>
+  <ShimmerEffectProvider
+    highlightColor={colors[colorMode]?.shimmer_highlight}
+    backgroundColor={colors[colorMode]?.shimmer_background}>
     {protoArray.map(item => (
       <ShimmerContainer key={item}>
-        <ShimmerTitle
-          shimmerColors={[
-            colors[colorMode].shimmer_background,
-            colors[colorMode].shimmer_highlight,
-            colors[colorMode].shimmer_background,
-          ]}
-        />
-        <ShimmerDescription
-          shimmerColors={[
-            colors[colorMode].shimmer_background,
-            colors[colorMode].shimmer_highlight,
-            colors[colorMode].shimmer_background,
-          ]}
-        />
-        <ShimmerImage
-          shimmerColors={[
-            colors[colorMode].shimmer_background,
-            colors[colorMode].shimmer_highlight,
-            colors[colorMode].shimmer_background,
-          ]}
-        />
+        <ShimmerTitle />
+        <ShimmerDescription />
+        <ShimmerImage />
       </ShimmerContainer>
     ))}
-  </>
+  </ShimmerEffectProvider>
 ));
 
 const ShimmerContainer = styled.View`
   margin-bottom: 24px;
 `;
 
-const ShimmerBase = styled(ShimmerPlaceholder).attrs({
-  LinearGradient: LinearGradient,
-})`
+const ShimmerBase = styled.View`
   border-radius: 4px;
   margin-bottom: 4px;
+  background: #fff;
 `;
 
 const ShimmerTitle = styled(ShimmerBase)`
