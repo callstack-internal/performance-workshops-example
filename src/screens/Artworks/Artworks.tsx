@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  useColorScheme,
-  SafeAreaView,
-  StatusBar,
-  ScrollView,
-} from 'react-native';
+import {useColorScheme, SafeAreaView, StatusBar, FlatList} from 'react-native';
 import {useQuery} from 'react-query';
 import {ArtworksShimmer} from '~components';
 import {artService} from '~services/artService';
@@ -19,6 +14,11 @@ import {
   ItemTitle,
   SubHeader,
 } from './Artworks.styled';
+
+type ItemProps = {
+  item: any;
+  currentMode: 'dark' | 'light';
+};
 
 export const Artworks = withProfiler('Tab:Artworks', () => {
   const currentMode: 'light' | 'dark' = useColorScheme() || 'dark';
@@ -47,26 +47,33 @@ export const Artworks = withProfiler('Tab:Artworks', () => {
         {!data ? (
           <ArtworksShimmer colorMode={currentMode} />
         ) : (
-          <ScrollView>
-            {data?.data?.map((item: any) => (
-              <Item key={item.id}>
-                <ItemTitle color={colors[currentMode].text}>
-                  {item?.title}
-                </ItemTitle>
-                <ItemDescription color={colors[currentMode].text}>
-                  {item?.thumbnail?.alt_text}
-                </ItemDescription>
-                <ItemImagePlaceholder
-                  isDark={isDarkMode}
-                  source={{
-                    uri: `https://www.artic.edu/iiif/2/${item?.image_id}/full/1680,/0/default.jpg`,
-                  }}
-                />
-              </Item>
-            ))}
-          </ScrollView>
+          <FlatList
+            windowSize={2}
+            initialNumToRender={4}
+            onEndReachedThreshold={80}
+            data={data?.data}
+            keyExtractor={item => item.id}
+            renderItem={({item}) => (
+              <Artwork item={item} currentMode={currentMode} />
+            )}
+          />
         )}
       </Container>
     </SafeAreaView>
   );
 });
+
+const Artwork = ({item, currentMode}: ItemProps) => (
+  <Item key={item.id}>
+    <ItemTitle color={colors[currentMode].text}>{item?.title}</ItemTitle>
+    <ItemDescription color={colors[currentMode].text}>
+      {item?.thumbnail?.alt_text}
+    </ItemDescription>
+    <ItemImagePlaceholder
+      isDark={currentMode === 'dark'}
+      source={{
+        uri: `https://www.artic.edu/iiif/2/${item?.image_id}/full/1680,/0/default.jpg`,
+      }}
+    />
+  </Item>
+);
