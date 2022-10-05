@@ -10,7 +10,7 @@ import {
   NativeSyntheticEvent,
 } from 'react-native';
 import {useInfiniteQuery} from 'react-query';
-import {ExhibitionsShimmer} from '~components/shimmers/ExhibitionsShimmer';
+import {ExhibitionsShimmer} from '~components/shimmers';
 import {artService} from '~services/artService';
 import {colors} from '~utils/colors';
 import {
