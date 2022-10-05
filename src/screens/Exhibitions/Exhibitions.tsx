@@ -73,7 +73,7 @@ export const Exhibitions = ({}: Props) => {
     }
   };
 
-  const getExhibitionsArray = React.useCallback<() => any[] | null>(() => {
+  const getExhibitionsArray = () => {
     if (!data?.pages.length) {
       return null;
     }
@@ -83,7 +83,7 @@ export const Exhibitions = ({}: Props) => {
     );
 
     return result;
-  }, [data?.pages]);
+  };
 
   return (
     <SafeAreaView style={backgroundStyle}>
