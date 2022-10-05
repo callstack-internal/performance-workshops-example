@@ -3,7 +3,6 @@ import styled from 'styled-components/native';
 export const Container = styled.View`
   height: 100%;
   width: 100%;
-  padding: 32px;
 `;
 
 export const Header = styled.Text`
@@ -28,7 +27,7 @@ export const TimerCaption = styled(SubHeader)`
 `;
 
 export const Item = styled.View`
-  padding: 4px 8px;
+  padding: 4px 16px;
   margin-bottom: 16px;
 `;
 
