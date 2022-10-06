@@ -24,6 +24,12 @@ export const NextExhibitionTimer = () => {
 
   React.useEffect(() => {
     timer.current = setInterval(() => setTimerLabel(formatTimeLeft()), 5000);
+
+    return () => {
+      if (timer.current) {
+        clearInterval(timer.current);
+      }
+    };
   }, [formatTimeLeft]);
 
   return timerLabel ? (
