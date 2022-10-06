@@ -10,6 +10,7 @@ import {
   NativeSyntheticEvent,
 } from 'react-native';
 import {useInfiniteQuery} from 'react-query';
+import {NextExhibitionTimer} from '~components';
 import {ExhibitionsShimmer} from '~components/shimmers';
 import {artService} from '~services/artService';
 import {colors} from '~utils/colors';
@@ -24,34 +25,17 @@ import {
   ItemTitle,
   LoadingCaption,
   SubHeader,
-  TimerCaption,
 } from './Exhibitions.styled';
 
 type Props = {};
 
-const newExhibitionDate = new Date(2022, 12, 25, 15, 35);
-
 export const Exhibitions = withProfiler('Tab:Exhibitions', ({}: Props) => {
-  const [timerLabel, setTimerLabel] = React.useState<string | null>(null);
-
-  const timer = React.useRef<number | undefined>(undefined);
   const currentMode: 'light' | 'dark' = useColorScheme() || 'dark';
   const isDarkMode = currentMode === 'dark';
 
   const backgroundStyle = {
     backgroundColor: colors[currentMode].background,
   };
-
-  React.useEffect(() => {
-    timer.current = setInterval(
-      () => setTimerLabel(formatTimeLeft(newExhibitionDate)),
-      5000,
-    );
-
-    return () => {
-      timer.current && clearInterval(timer.current);
-    };
-  }, []);
 
   const {data, fetchNextPage, isFetchingNextPage} = useInfiniteQuery<any>(
     ['artworks', 'collections/exhibitions'],
@@ -97,9 +81,7 @@ export const Exhibitions = withProfiler('Tab:Exhibitions', ({}: Props) => {
         <SubHeader color={colors[currentMode].text}>
           Available Exhibitions
         </SubHeader>
-        {!!timerLabel && (
-          <TimerCaption>{`Time until our next exhibition: \n${timerLabel}`}</TimerCaption>
-        )}
+        <NextExhibitionTimer />
         {getExhibitionsArray() === null ? (
           <ExhibitionsShimmer colorMode={currentMode} />
         ) : (
@@ -133,16 +115,3 @@ export const Exhibitions = withProfiler('Tab:Exhibitions', ({}: Props) => {
     </SafeAreaView>
   );
 });
-
-const formatTimeLeft = (date: Date) => {
-  const now = new Date();
-  const dateDiff = date.getTime() - now.getTime();
-  const days = Math.floor(dateDiff / (1000 * 60 * 60 * 24));
-  const hours = Math.floor(
-    (dateDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-  );
-  const minutes = Math.floor((dateDiff % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((dateDiff % (1000 * 60)) / 1000);
-
-  return `${days}d ${hours}h ${minutes}min ${seconds}sec`;
-};
