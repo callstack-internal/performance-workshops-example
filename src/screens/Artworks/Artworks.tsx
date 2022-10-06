@@ -73,7 +73,7 @@ const Artwork = ({item, currentMode}: ItemProps) => (
     <ItemImagePlaceholder
       isDark={currentMode === 'dark'}
       source={{
-        uri: `https://www.artic.edu/iiif/2/${item?.image_id}/full/1680,/0/default.jpg`,
+        uri: `https://www.artic.edu/iiif/2/${item?.image_id}/full/200,/0/default.jpg`,
         priority: FastImage.priority.low,
       }}
       resizeMode={FastImage.resizeMode.cover}
