@@ -13,7 +13,7 @@ export const BottomTabNavigator = () => {
 
   return (
     <Tab.Navigator
-      initialRouteName="Exhibitions"
+      initialRouteName="About"
       screenOptions={() => ({
         headerStyle: {
           backgroundColor: colors[currentMode].background,
@@ -29,15 +29,14 @@ export const BottomTabNavigator = () => {
         tabBarIcon: Noop,
         tabBarLabelStyle: styles.tabBarLabel,
         tabBarItemStyle: styles.tabBarItem,
-        lazy: false,
       })}>
-      <Tab.Screen name="Exhibitions" component={Exhibitions} />
-      <Tab.Screen name="Artworks" component={Artworks} />
       <Tab.Screen
         name="About"
         component={About}
         options={() => ({header: Noop})}
       />
+      <Tab.Screen name="Exhibitions" component={Exhibitions} />
+      <Tab.Screen name="Artworks" component={Artworks} />
     </Tab.Navigator>
   );
 };
