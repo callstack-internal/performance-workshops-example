@@ -7,6 +7,7 @@ import {
   Linking,
   FlatList,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {useInfiniteQuery} from 'react-query';
 import {NextExhibitionTimer} from '~components';
 import {ExhibitionsShimmer} from '~components/shimmers';
@@ -106,7 +107,8 @@ const Exhibition = ({item, currentMode}: ItemProps) => {
       </ItemDescription>
       <ItemImagePlaceholder
         isDark={currentMode === 'dark'}
-        source={{uri: item?.image_url}}
+        source={{uri: item?.image_url, priority: FastImage.priority.low}}
+        resizeMode={FastImage.resizeMode.cover}
       />
       {item?.web_url ? (
         <TouchableOpacity onPress={onPressLink}>
