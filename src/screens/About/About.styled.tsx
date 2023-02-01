@@ -3,7 +3,7 @@ import styled from 'styled-components/native';
 export const Container = styled.View`
   height: 100%;
   width: 100%;
-  padding: 64px 32px 64px 24px;
+  padding: 20px 32px 0px 24px;
 `;
 
 export const Header = styled.Text`
@@ -25,9 +25,16 @@ export const SubHeader = styled.Text`
 
 export const Paragraph = styled.Text`
   font-size: 18px;
-  font-weight: 500;
+  font-weight: ${({fontWeight}) => fontWeight ?? '400'};
   margin: 8px 0;
   line-height: 22px;
   letter-spacing: 0.2px;
   color: ${({color}) => color};
+`;
+
+export const Divider = styled.View`
+  height: 1px;
+  width: 100%;
+  border: 0.3px solid black;
+  margin-vertical: 15px;
 `;
