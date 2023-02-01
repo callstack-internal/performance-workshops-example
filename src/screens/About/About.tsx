@@ -10,6 +10,7 @@ import {
 import {Container, Divider, Header, Paragraph, SubHeader} from './About.styled';
 
 import {colors} from '~utils/colors';
+import {withProfiler} from '~utils/measure';
 
 const Excersises = ({currentMode}: {currentMode: 'dark' | 'light'}) => {
   return (
@@ -177,7 +178,7 @@ const Excersises = ({currentMode}: {currentMode: 'dark' | 'light'}) => {
   );
 };
 
-export const About = () => {
+export const About = withProfiler('Tab:About', () => {
   const currentMode: 'dark' | 'light' = useColorScheme() || 'dark';
   const isDarkMode = currentMode === 'dark';
 
@@ -221,4 +222,4 @@ export const About = () => {
       </Container>
     </SafeAreaView>
   );
-};
+});
